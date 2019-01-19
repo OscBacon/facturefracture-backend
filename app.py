@@ -3,6 +3,8 @@ from flask import Flask, flash, request, redirect, url_for, render_template, \
     send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import string
+import random
 
 UPLOAD_FOLDER = os.path.join('static','uploads')
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
@@ -48,3 +50,6 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+def generate_code():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) \
+                   for _ in range(6))
