@@ -1,0 +1,15 @@
+{
+  'split-by':'total',
+  'participants':['cheryl', 'roya', 'oscar'],
+  'unassigned':{'total':60.00},
+  'unpaid':{
+    'roya':20.00,
+    'cheryl':20.00
+  },
+  'paid':{
+    'oscar':20.00
+  },
+  'total':60.00,
+  'dinner-daddy':'roya',
+  'final':true
+}
