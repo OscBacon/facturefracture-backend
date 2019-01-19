@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import string
 import random
+from manage_blobs import upload_blob
 
 UPLOAD_FOLDER = os.path.join('static','uploads')
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
