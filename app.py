@@ -46,10 +46,9 @@ def create_bill():
                                    filename=filename)
     return render_template("upload_file.html")
 
-@app.route('/uploads/<filename>')
+
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+    return os.path.join(UPLOAD_FOLDER, filename)
 
 def generate_code():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) \
