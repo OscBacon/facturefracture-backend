@@ -32,18 +32,23 @@ def create_bill():
         extension = file.filename.rsplit('.', 1)[1].lower()
 
         if file and '.' in file.filename and allowed_extension(extension):
-            user = request.args.get('user', 'no_user')
+            code = generate_code()
             timestamp = datetime.now().strftime('%d%m%y%H%M%S')
-            filename = user + '_' + timestamp + '.' + extension
+            filename = code + '_' + timestamp + '.' + extension
 
             try:
                 file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            except FileNotFoundError:
-                flash("File not found!")
+                upload_blob(filename, uploaded_file(filename))
+                filepath="https://facturefracture.blob.core.windows.net/bills-images/" + \
+                    filename
+                # os.remove(url_for('uploaded_file', filename=filename))
+                return render_template("uploaded_file.html",
+                                       filepath=filepath, code=code)
+
+            except:
+                flash("Upload Error!")
                 return redirect(request.url)
 
-            return render_template("uploaded_file.html",
-                                   filename=filename)
     return render_template("upload_file.html")
 
 
