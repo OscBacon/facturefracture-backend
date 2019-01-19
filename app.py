@@ -37,10 +37,11 @@ def create_bill():
             filename = code + '_' + timestamp + '.' + extension
 
             try:
-                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-                upload_blob(filename, uploaded_file(filename))
-                filepath="https://facturefracture.blob.core.windows.net/bills-images/" + \
-                    filename
+                file.save(os.path.join("bills-images", filename))
+                # upload_blob(filename, uploaded_file(filename))
+                # filepath="https://facturefracture.blob.core.windows.net/bills-images/" + \
+                    # filename
+                filepath = os.path.join("bills-images", filename)
                 # os.remove(url_for('uploaded_file', filename=filename))
                 return render_template("uploaded_file.html",
                                        filepath=filepath, code=code)
