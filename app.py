@@ -24,6 +24,10 @@ def create_bill():
         if 'file' not in request.files:
             flash("No file uploaded!")
             return redirect(request.url)
+        print("===headers===")
+        print(request.headers)
+        print("===files===")
+        print(request.files)
         file = request.files['file']
         if file.filename == '':
             flash("No file selected!")
