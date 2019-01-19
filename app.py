@@ -21,13 +21,13 @@ def allowed_extension(extension):
 @app.route("/create_bill", methods=["GET", "POST"])
 def create_bill():
     if request.method == "POST":
-        if 'file' not in request.files:
-            flash("No file uploaded!")
-            return redirect(request.url)
         print("===headers===")
         print(request.headers)
         print("===files===")
         print(request.files)
+        if 'file' not in request.files:
+            flash("No file uploaded!")
+            return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
             flash("No file selected!")
