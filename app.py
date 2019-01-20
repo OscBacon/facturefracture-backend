@@ -78,7 +78,7 @@ def pay_bill():
         if participant != bill['dinnerdaddy']:
             amount = bill['unpaid'][participant]
             sendMoneyRequest(participant, amount, bill['dinnerdaddy'], code)
-            
+    return 'Payment requests sent!'
 
 
 @app.route("/update_bill", methods=["POST"])
