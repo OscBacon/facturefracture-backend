@@ -9,7 +9,6 @@ from manage_blobs import upload_blob
 import base64
 
 UPLOAD_FOLDER = os.path.join('static','uploads')
-ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
