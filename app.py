@@ -22,7 +22,7 @@ def create_bill():
     code = generate_code()
     filename = code + '.jpg'
 
-    filepath = os.path.join(os.sep, "bills-images", filename)
+    filepath = os.path.join(os.sep, "/bills-images", filename)
     file.save(filepath)
     image_filepath = "https://facturefracture.blob.core.windows.net/bills-images/" + filename
     total = scan_image(image_filepath)
