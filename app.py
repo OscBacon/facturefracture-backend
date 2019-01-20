@@ -35,6 +35,7 @@ def create_bill():
 
     return jsonify(code=code, json_filepath=json_filepath)
 
+
 @app.route("/add_participant", methods=["POST"])
 def add_user():
     args = request.get_json()
@@ -190,6 +191,7 @@ def create_json(code, total, user):
     with open(filepath, 'w+') as f:
         json.dump(bill_dict, f)
     return "https://facturefracture.blob.core.windows.net/bills-json/" + filename
+
 
 def _get_json_from_code(code):
     return os.path.join(os.sep, 'bills-json', code + '.json')
