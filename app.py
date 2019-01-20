@@ -51,7 +51,7 @@ def add_user():
 
     with open(filepath, 'r') as f:
         bill = json.load(f)
-    bill['participants'] += user
+    bill['participants'].append(user)
     bill['unpaid'][user] = 0.0
     if bill['split-by'] == 'total-even':
         num_participants = len(bill['participants'])
