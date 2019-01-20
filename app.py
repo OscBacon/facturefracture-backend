@@ -5,10 +5,8 @@ import random
 import json
 from imagescanner import scan_image
 
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'my dude'
 
 
