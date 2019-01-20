@@ -4,6 +4,7 @@ import string
 import random
 import json
 from imagescanner import scan_image
+from interac import sendMoneyRequest
 
 BILL_ATTRIBUTES = ['split-by', 'participants', 'unassigned', 'unpaid', 'paid', 'total', 'final']
 UPDATE_TYPES = ['total', 'user-amount', 'paid', 'split-by', 'final', 'remove-user']
@@ -61,6 +62,23 @@ def add_user():
 
     json_filepath = "https://facturefracture.blob.core.windows.net/bills-json/" + code + '.json'
     return jsonify(message='User added!', json_filepath=json_filepath)
+
+
+@app.route("/pay_bill", method=["POST"])
+def pay_bill():
+    args = request.get_json()
+    code = args.get("code")
+    if not code or not os.path.isfile(_get_json_from_code(code)):
+        return jsonify(message="invalid code"), 400
+
+    with open(_get_json_from_code(code), 'r') as f:
+        bill = json.load(f)
+
+    for participant in bill['participants']:
+        if participant != bill['dinnerdaddy']:
+            amount = bill['unpaid'][participant]
+            sendMoneyRequest(participant, amount, bill['dinnerdaddy'], code)
+            
 
 
 @app.route("/update_bill", methods=["POST"])
