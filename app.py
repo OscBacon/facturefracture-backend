@@ -62,7 +62,7 @@ def delete_bill(code):
     img_path = os.path.join(os.sep, 'bills-images', code + '.jpg')
     if os.path.isfile(img_path):
         os.remove(img_path)
-    json_path = os.path.join(os.sep, 'bills-json', code + '.json')
+    json_path = _get_json_from_code(code)
     if os.path.isfile(json_path):
         os.remove(json_path)
 
@@ -90,3 +90,6 @@ def create_json(code, total, user):
     with open(filepath, 'w+') as f:
         f.write(json_bill)
     return "https://facturefracture.blob.core.windows.net/bills-json/" + filename
+
+def _get_json_from_code(code):
+    return os.path.join(os.sep, 'bills-json', code + '.json')
