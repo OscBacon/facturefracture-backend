@@ -12,6 +12,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = 'my dude'
 
 # Check if file has an allowed extension
 def allowed_extension(extension):
