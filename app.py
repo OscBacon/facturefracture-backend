@@ -27,6 +27,7 @@ def create_bill():
     image_filepath = "https://facturefracture.blob.core.windows.net/bills-images/" + filename
     total = scan_image(image_filepath)
     if total == -1:
+        delete_bill(code)
         return jsonify(message="bill not recognized"), 502
     json_filepath = create_json(code, total, user)
 
