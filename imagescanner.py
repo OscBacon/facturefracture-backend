@@ -68,14 +68,17 @@ def scan_image(url):
     parsed = json.loads(response.text)
 
     # Get the transcribed lines of text
-    lines = parsed['recognitionResult']['lines']
+    if 'recognitionResul' in parsed:
+        lines = parsed['recognitionResult']['lines']
 
-    total_string = None
-    for i in range(len(lines)):
+        total_string = None
+        for i in range(len(lines)):
 
-        if lines[i]['text'].strip().replace(':', '').lower() == 'total':
+            if lines[i]['text'].strip().replace(':', '').lower() == 'total':
 
-            if i < len(lines) - 1:
-                total_string = lines[i + 1]['text']
+                if i < len(lines) - 1:
+                    total_string = lines[i + 1]['text']
 
-    return process_total_string(total_string)
+        return process_total_string(total_string)
+    else:
+        return -1
