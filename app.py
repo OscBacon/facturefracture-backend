@@ -65,3 +65,17 @@ def uploaded_file(filename):
 def generate_code():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) \
                    for _ in range(6))
+
+def create_json(code, total, user):
+    dict = {
+        'split-by': total,
+        'participants':[user],
+        'unassigned':0.00,
+        'unpaid': {
+            user: total
+        },
+        'paid': {},
+        'total': total,
+        'dinnerdaddy':user,
+        'final': false
+    }
