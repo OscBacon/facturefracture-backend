@@ -5,6 +5,8 @@ import random
 import json
 from imagescanner import scan_image
 
+BILL_ATTRIBUTES = ['split-by', 'participants', 'unassigned', 'unpaid', 'paid', 'total', 'final']
+UPDATE_TYPES = ['total', 'user-amount', 'paid', 'split-by', 'final', 'remove-user']
 
 app = Flask(__name__)
 app.secret_key = 'my dude'
@@ -57,6 +59,106 @@ def add_user():
     with open(filepath, 'w') as f:
         f.write(json_bill)
     return 'User added!'
+
+
+@app.route("/update_bill", methods=["POST"])
+def update_bill():
+    args = request.get_json()
+    code = args.get("code")
+    if not code or not os.path.isfile(_get_json_from_code(code)):
+        return jsonify(message="invalid code"), 400
+
+    update_type = args.get("update_type")
+    if not update_type or update_type not in UPDATE_TYPES:
+        return jsonify(message="invalid update type"), 400
+
+    # Assume that if there is an update_type, appropriate key, value pairs are provided
+    with open(_get_json_from_code(code), 'r') as f:
+        bill = json.load(f)
+
+    if update_type == "total":
+        if bill['final']:
+            return jsonify(message="can't edit finalized bill"), 403
+        total = args.get("total")
+        _update_total(bill, total)
+
+    elif update_type == "user-amount":
+        if bill['final']:
+            return jsonify(message="can't edit finalized bill"), 403
+        user = args.get("user")
+        amount = args.get("amount")
+        _update_user_amount(bill, user, amount)
+
+    elif update_type == "paid":
+        if not bill['final']:
+            return jsonify(message="can't pay for unfinalized bill"), 403
+        user = args.get("user")
+        _update_paid(bill, user)
+
+    elif update_type == "remove-user":
+        if bill['final']:
+            return jsonify(message="can't remove user from finalized bill"), 403
+        user = args.get("user")
+        _remove_user(bill, user)
+
+    elif update_type == "split-by":
+        if bill['final']:
+            return jsonify(message="can't edit finalized bill"), 403
+        split_by = args.get("split-by")
+        bill['split-by'] = split_by
+
+    elif update_type == "final":
+        final = args.get("final")
+        bill['final'] = final
+
+    json_bill = json.dumps(bill)
+    with open(_get_json_from_code(code), 'w') as f:
+        f.write(json_bill)
+
+    return 'Bill updated!'
+
+
+def _update_total(bill, new_total):
+    # cast new_total to a float to avoid issues with arithmetics
+    bill['total'] = float(new_total)
+    if bill['split-by'] == "total-even":
+        num_participants = len(bill['participants'])
+        for participant in bill['participants']:
+            bill['participants'][participant] = new_total / num_participants
+    elif bill['split-by'] == "total-uneven":
+        bill['unassigned'] += new_total - bill['total']
+
+
+def _update_user_amount(bill, user, amount):
+    if amount < bill['unpaid'][user]:
+        # amount is less than participant's current amount, increase unassigned amount
+        difference = amount - bill['unpaid'][user]
+        bill['unassigned'] += difference
+        bill['unpaid'][user] = amount
+    elif amount > bill['unpaid'][user]:
+        # amount is more than participant's current amount, redistribute leftover amount to other users
+        num_participants = len(bill['participants'])
+        for participant in bill['participants']:
+            if participant != user:
+                bill['unpaid'][participant] = (bill['total'] - amount) / (num_participants - 1)
+
+
+def _update_paid(bill, user):
+    bill['paid'][user] = bill['unpaid'][user]
+    bill['paid'].remove(user)
+
+
+def _remove_user(bill, user):
+    user_amount = bill['unpaid'].pop(user)
+    bill['participants'].remove(user)
+
+    if bill['split-by'] == "total-even":
+        num_participants = len(bill['participants'])
+        for participant in bill['participants']:
+            bill['unpaid'][participant] = bill['total'] / num_participants
+
+    elif bill['split-by'] == "total-uneven":
+        bill['unassigned'] += user_amount
 
 
 def delete_bill(code):
