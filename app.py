@@ -19,7 +19,6 @@ def create_bill():
             print("no user given")
             return redirect(request.url)
         if 'photo' not in request.files:
-            flash("No file uploaded!")
             print("no file uploaded")
             return redirect(request.url)
         file = request.files['photo']
