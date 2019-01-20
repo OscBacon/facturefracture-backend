@@ -15,10 +15,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'my dude'
 
-# Check if file has an allowed extension
-def allowed_extension(extension):
-    return extension in ALLOWED_EXTENSIONS
-
 # Currently, bills can be uploaded on a webpage
 @app.route("/create_bill", methods=["GET", "POST"])
 def create_bill():
@@ -33,7 +29,6 @@ def create_bill():
         #     return redirect(request.url)
         json = request.get_json()
 
-        # extension = file.filename.rsplit('.', 1)[1].lower()
 
         if 'file' in json != "":
             code = generate_code()
