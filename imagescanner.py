@@ -78,6 +78,8 @@ def scan_image(url):
 
                 if i < len(lines) - 1:
                     total_string = lines[i + 1]['text']
+        if not total_string:
+            return -1
 
         return process_total_string(total_string)
     else:
