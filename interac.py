@@ -46,17 +46,15 @@ def sendMoneyRequest(user, amount, dinnerdaddy, code,
                      invoiceNumber='string', supressResponderNotifications='string',
                      returnURL='string', status='string', fulfillAmount='string',
                      responderMessage='string', notificationStatus='string'):
-    os.environ['ACCESS_TOKEN'] = "8b50801e-5ae4-494e-925c-eec9adddbdb8"
-
-    fromDate = datetime.datetime.now().isoformat()[:-3]
-    expiryDate = (datetime.datetime.now() + datetime.timedelta(365)).isoformat()[:-3]
+    fromDate = '2019-01-01T16:12:12.000Z'
+    expiryDate = '2019-01-20T16:12:12.000Z'
 
     headerBody = {
         'accessToken': 'Bearer ' + os.environ['ACCESS_TOKEN'],
-        'thirdPartyAccessId': 'CA1TA8652HQPS3qY',
-        'requestId': '4453a5bb-fd72-481f-b796-8efbe43b0d22',
-        'deviceId': '49794efc-aefd-4e4c-a4e8-2d013ade09a9',
-        'apiRegistrationId': 'CA1AR3HKNc3peBP2'
+        'thirdPartyAccessId': 'CA1TAJvqNup3wGus',
+        'requestId': 'requestID',
+        'deviceId': 'deviceId',
+        'apiRegistrationId': 'CA1ARZmvN2QXjaUc'
 
     }
 
@@ -64,13 +62,13 @@ def sendMoneyRequest(user, amount, dinnerdaddy, code,
         "referenceNumber": referenceNumber,
         "sourceMoneyRequestId": 'asfd',
         "requestedFrom": {
-            "contactId": 'CArEgVW9BTXu',
-            "contactHash": '2214257a5dd76589f1236687548548a2',
+            # "contactId": 'CArEgVW9BTXu',
+            # "contactHash": '2214257a5dd76589f1236687548548a2',
             "contactName": user,
             "language": 'en',
             "notificationPreferences": [
                 {
-                    "handle": "oscar.baracos@gmail.com",
+                    "handle": user,
                     "handleType": "email",
                     "active": True
                 }
