@@ -55,15 +55,20 @@ def generate_code():
                    for _ in range(6))
 
 def create_json(code, total, user):
-    dict = {
+    bill_dict = {
         'split-by': total,
-        'participants':[user],
-        'unassigned':0.00,
+        'participants': [user],
+        'unassigned': 0.00,
         'unpaid': {
             user: total
         },
         'paid': {},
         'total': total,
-        'dinnerdaddy':user,
-        'final': false
+        'dinnerdaddy': user,
+        'final': False
     }
+    json_bill = json.dumps(bill_dict)
+    filename = code + '.json'
+    filepath = os.path.join(os.sep, 'bills-json', filename)
+    with open(filepath, 'w+') as f:
+        f.write(json_bill)
