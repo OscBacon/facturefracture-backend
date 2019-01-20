@@ -34,8 +34,7 @@ def create_bill():
             return jsonify(code=code)
 
 
-def uploaded_file(filename):
-    return os.path.join(UPLOAD_FOLDER, filename)
+            return jsonify(code=code, json_filepath=json_filepath)
 
 
 def generate_code():
