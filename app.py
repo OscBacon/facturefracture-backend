@@ -58,7 +58,9 @@ def add_user():
             bill['unpaid'][participant] = bill['total'] / num_participants
     with open(filepath, 'w') as f:
         json.dump(bill, f)
-    return 'User added!'
+
+    json_filepath = "https://facturefracture.blob.core.windows.net/bills-json/" + code + '.json'
+    return jsonify(message='User added!', json_filepath=json_filepath)
 
 
 @app.route("/update_bill", methods=["POST"])
