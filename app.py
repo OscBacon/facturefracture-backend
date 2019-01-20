@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, request, redirect, render_template
+from flask import Flask, flash, request, redirect, render_template, jsonify
 import string
 import random
 import json
@@ -11,7 +11,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'my dude'
 
 
-@app.route("/create_bill", methods=["GET", "POST"])
+@app.route("/create_bill", methods=["POST"])
 def create_bill():
     if request.method == "POST":
         if 'photo' not in request.files:
@@ -31,9 +31,7 @@ def create_bill():
             file.save(filepath)
             azure_filepath = "https://facturefracture.blob.core.windows.net/bills-images/" + \
                 filename
-            return render_template("uploaded_file.html", filepath=azure_filepath, code=code)
-
-    return render_template("upload_file.html")
+            return jsonify(code=code)
 
 
 def uploaded_file(filename):
