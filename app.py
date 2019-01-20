@@ -45,7 +45,7 @@ def add_user():
     if not code or not user:
         return jsonify(message="missing argument"), 400
 
-    filepath = os.path.join(os.sep, 'bills-json', os.sep, code + '.json')
+    filepath = os.path.join(os.sep, 'bills-json', code + '.json')
     if not os.path.isfile(filepath):
         return jsonify(message="verification code is invalid"), 400
 
