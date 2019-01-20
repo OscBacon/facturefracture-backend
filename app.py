@@ -64,21 +64,21 @@ def add_user():
     return jsonify(message='User added!', json_filepath=json_filepath)
 
 
-# @app.route("/pay_bill", method=["POST"])
-# def pay_bill():
-#     args = request.get_json()
-#     code = args.get("code")
-#     if not code or not os.path.isfile(_get_json_from_code(code)):
-#         return jsonify(message="invalid code"), 400
-#
-#     with open(_get_json_from_code(code), 'r') as f:
-#         bill = json.load(f)
-#
-#     for participant in bill['participants']:
-#         if participant != bill['dinnerdaddy']:
-#             amount = bill['unpaid'][participant]
-#             sendMoneyRequest(participant, amount, bill['dinnerdaddy'], code)
-#     return 'Payment requests sent!'
+@app.route("/pay_bill", methods=["POST"])
+def pay_bill():
+    args = request.get_json()
+    code = args.get("code")
+    if not code or not os.path.isfile(_get_json_from_code(code)):
+        return jsonify(message="invalid code"), 400
+
+    with open(_get_json_from_code(code), 'r') as f:
+        bill = json.load(f)
+
+    for participant in bill['participants']:
+        if participant != bill['dinnerdaddy']:
+            amount = bill['unpaid'][participant]
+            sendMoneyRequest(participant, amount, bill['dinnerdaddy'], code)
+    return 'Payment requests sent!'
 
 
 @app.route("/update_bill", methods=["POST"])
