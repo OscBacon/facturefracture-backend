@@ -19,18 +19,16 @@ app.secret_key = 'my dude'
 @app.route("/create_bill", methods=["GET", "POST"])
 def create_bill():
     if request.method == "POST":
-        # if 'file' not in request.files:
-        #     flash("No file uploaded!")
-        #     print("no file uploaded")
-        #     return redirect(request.url)
-        # file = request.files['file']
-        # if file.filename == '':
-        #     flash("No file selected!")
-        #     return redirect(request.url)
-        json = request.get_json()
+        if 'photo' not in request.files:
+            flash("No file uploaded!")
+            print("no file uploaded")
+            return redirect(request.url)
+        file = request.files['photo']
+        if file.filename == '':
+            flash("No file selected!")
+            return redirect(request.url)
 
-
-        if 'file' in json != "":
+        if file:
             code = generate_code()
             timestamp = datetime.now().strftime('%d%m%y%H%M%S')
             filename = code + '_' + timestamp + '.jpg'
@@ -38,12 +36,8 @@ def create_bill():
             try:
                 filepath = os.path.join(os.sep, "/bills-images", filename)
                 file.save(filepath)
-
-                with open(filepath, "wb") as f:
-                    f.write(base64.decodebytes(json['file']))
                 azure_filepath="https://facturefracture.blob.core.windows.net/bills-images/" + \
                     filename
-
                 return render_template("uploaded_file.html",
                                        filepath=azure_filepath, code=code)
 
