@@ -57,6 +57,16 @@ def add_user():
         f.write(json_bill)
     return 'User added!'
 
+
+def delete_bill(code):
+    img_path = os.path.join(os.sep, 'bills-images', code + '.jpg')
+    if os.path.isfile(img_path):
+        os.remove(img_path)
+    json_path = os.path.join(os.sep, 'bills-json', code + '.json')
+    if os.path.isfile(json_path):
+        os.remove(json_path)
+
+
 def generate_code():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
