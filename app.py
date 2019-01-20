@@ -42,7 +42,7 @@ def generate_code():
 
 def create_json(code, total, user):
     bill_dict = {
-        'split-by': total,
+        'split-by': 'total-even',
         'participants': [user],
         'unassigned': 0.00,
         'unpaid': {
