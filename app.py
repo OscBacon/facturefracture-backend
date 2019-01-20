@@ -6,6 +6,7 @@ from datetime import datetime
 import string
 import random
 from manage_blobs import upload_blob
+import base64
 
 UPLOAD_FOLDER = os.path.join('static','uploads')
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png'])
