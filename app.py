@@ -32,6 +32,30 @@ def create_bill():
 
     return jsonify(code=code, json_filepath=json_filepath)
 
+@app.route("/add_participant", methods=["POST"])
+def add_user():
+    args = request.get_json()
+    code = args.get("code")
+    user = args.get("user")
+    if not code or not user:
+        return jsonify(message="missing argument"), 400
+
+    filepath = os.path.join(os.sep, 'bills-json', os.sep, code + '.json')
+    if not os.path.isfile(filepath):
+        return jsonify(message="verification code is invalid"), 400
+
+    with open(filepath, 'r') as f:
+        bill = json.load(f)
+    bill['participants'] += user
+    bill['unpaid'][user] = 0.0
+    if bill['split-by'] == 'total-even':
+        num_participants = len(bill['participants'])
+        for participant in bill['unpaid']:
+            bill['unpaid'][participant] = bill['total'] / num_participants
+    json_bill = json.dumps(bill)
+    with open(filepath, 'w') as f:
+        f.write(json_bill)
+    return 'User added!'
 
 def generate_code():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
