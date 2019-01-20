@@ -55,9 +55,8 @@ def add_user():
         num_participants = len(bill['participants'])
         for participant in bill['unpaid']:
             bill['unpaid'][participant] = bill['total'] / num_participants
-    json_bill = json.dumps(bill)
     with open(filepath, 'w') as f:
-        f.write(json_bill)
+        json.dump(bill, f)
     return 'User added!'
 
 
@@ -111,9 +110,8 @@ def update_bill():
         final = args.get("final")
         bill['final'] = final
 
-    json_bill = json.dumps(bill)
     with open(_get_json_from_code(code), 'w') as f:
-        f.write(json_bill)
+        json.dump(bill, f)
 
     return 'Bill updated!'
 
@@ -187,11 +185,10 @@ def create_json(code, total, user):
         'dinnerdaddy': user,
         'final': False
     }
-    json_bill = json.dumps(bill_dict)
     filename = code + '.json'
     filepath = os.path.join(os.sep, 'bills-json', filename)
     with open(filepath, 'w+') as f:
-        f.write(json_bill)
+        json.dump(bill_dict, f)
     return "https://facturefracture.blob.core.windows.net/bills-json/" + filename
 
 def _get_json_from_code(code):
