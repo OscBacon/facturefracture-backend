@@ -21,24 +21,29 @@ def allowed_extension(extension):
 @app.route("/create_bill", methods=["GET", "POST"])
 def create_bill():
     if request.method == "POST":
-        if 'file' not in request.files:
-            flash("No file uploaded!")
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash("No file selected!")
-            return redirect(request.url)
+        # if 'file' not in request.files:
+        #     flash("No file uploaded!")
+        #     print("no file uploaded")
+        #     return redirect(request.url)
+        # file = request.files['file']
+        # if file.filename == '':
+        #     flash("No file selected!")
+        #     return redirect(request.url)
+        json = request.get_json()
 
-        extension = file.filename.rsplit('.', 1)[1].lower()
+        # extension = file.filename.rsplit('.', 1)[1].lower()
 
-        if file and '.' in file.filename and allowed_extension(extension):
+        if 'file' in json != "":
             code = generate_code()
             timestamp = datetime.now().strftime('%d%m%y%H%M%S')
-            filename = code + '_' + timestamp + '.' + extension
+            filename = code + '_' + timestamp + '.jpg'
 
             try:
                 filepath = os.path.join(os.sep, "/bills-images", filename)
                 file.save(filepath)
+
+                with open(filepath, "wb") as f:
+                    f.write(base64.decodebytes(json['file']))
                 azure_filepath="https://facturefracture.blob.core.windows.net/bills-images/" + \
                     filename
 
