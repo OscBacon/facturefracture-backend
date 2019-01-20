@@ -15,29 +15,25 @@ app.secret_key = 'my dude'
 @app.route("/create_bill", methods=["POST"])
 def create_bill():
     if request.method == "POST":
-        if 'user' not in request.form:
-            print("no user given")
-            return redirect(request.url)
+        if 'user' not in request.form or request.form['user'] == '':
+            return jsonify(message="no user given"), 400
         if 'photo' not in request.files:
-            print("no file uploaded")
-            return redirect(request.url)
+            return jsonify(message="no file uploaded"), 400
         file = request.files['photo']
         user = request.form['user']
-        if file.filename == '':
-            flash("No file selected!")
-            return redirect(request.url)
 
-        if file and user:
-            code = generate_code()
-            filename = code + '.jpg'
+        code = generate_code()
+        filename = code + '.jpg'
 
-            filepath = os.path.join(os.sep, "bills-images", filename)
-            file.save(filepath)
-            image_filepath = "https://facturefracture.blob.core.windows.net/bills-images/" + filename
-            total = scan_image(image_filepath)
-            json_filepath = create_json(code, total, user)
+        filepath = os.path.join(os.sep, "bills-images", filename)
+        file.save(filepath)
+        image_filepath = "https://facturefracture.blob.core.windows.net/bills-images/" + filename
+        total = scan_image(image_filepath)
+        if total == -1:
+            return jsonify(message="bill not recognized"), 502
+        json_filepath = create_json(code, total, user)
 
-            return jsonify(code=code, json_filepath=json_filepath)
+        return jsonify(code=code, json_filepath=json_filepath)
 
 
 def generate_code():
